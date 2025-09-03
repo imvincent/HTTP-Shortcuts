@@ -17,7 +17,6 @@ constructor(
             ?: SyncConfig(
                 id = syncType.value,
                 type = syncType,
-                target = "",
                 schedule = SyncSchedule.WEEKLY,
             )
     }

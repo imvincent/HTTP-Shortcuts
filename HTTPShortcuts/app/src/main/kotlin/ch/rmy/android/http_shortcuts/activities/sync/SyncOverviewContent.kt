@@ -142,6 +142,7 @@ private fun SyncContent_Preview() {
     SyncOverviewContent(
         viewState = SyncOverviewViewState(
             syncType = SyncType.IMPORT,
+            isConfigValid = true,
         ),
         onSyncTypeSelected = {},
         onConfigureImportClicked = {},

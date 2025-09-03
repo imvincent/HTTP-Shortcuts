@@ -5,9 +5,11 @@ import androidx.lifecycle.viewModelScope
 import ch.rmy.android.framework.viewmodel.BaseViewModel
 import ch.rmy.android.http_shortcuts.data.domains.sync.SyncRepository
 import ch.rmy.android.http_shortcuts.data.enums.SyncSchedule
+import ch.rmy.android.http_shortcuts.data.enums.SyncTargetType
 import ch.rmy.android.http_shortcuts.data.enums.SyncType
 import ch.rmy.android.http_shortcuts.data.models.SyncConfig
 import ch.rmy.android.http_shortcuts.data.settings.UserPreferences
+import ch.rmy.android.http_shortcuts.navigation.NavigationDestination
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlin.time.Duration.Companion.milliseconds
@@ -46,7 +48,9 @@ constructor(
         }
         return SyncExportViewState(
             schedule = config.schedule,
-            password = config.password,
+            targetType = config.targetType,
+            password = config.filePassword,
+            hasChanged = false,
         )
     }
 
@@ -56,19 +60,40 @@ constructor(
 
     fun onScheduleChanged(schedule: SyncSchedule) = runAction {
         updateViewState {
-            copy(schedule = schedule)
+            copy(
+                schedule = schedule,
+                hasChanged = true,
+            )
         }
         updateConfig {
             copy(schedule = schedule)
         }
     }
 
-    fun onPasswordChanged(password: String) = runAction {
+    fun onFilePasswordChanged(password: String) = runAction {
         updateViewState {
-            copy(password = password)
+            copy(
+                password = password,
+                hasChanged = true,
+            )
         }
         updateConfig {
-            copy(password = password)
+            copy(filePassword = password)
         }
+    }
+
+    fun onTargetTypeChanged(targetType: SyncTargetType) = runAction {
+        updateViewState {
+            copy(
+                targetType = targetType,
+            )
+        }
+        updateConfig {
+            copy(targetType = targetType)
+        }
+    }
+
+    fun onBackPressed() = runAction {
+        closeScreen(NavigationDestination.SyncExport.RESULT_CHANGED)
     }
 }

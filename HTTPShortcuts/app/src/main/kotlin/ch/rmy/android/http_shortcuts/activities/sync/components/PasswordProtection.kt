@@ -8,18 +8,20 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.PasswordVisualTransformation
 import ch.rmy.android.http_shortcuts.R
 
 @Composable
 fun PasswordProtection(
     modifier: Modifier,
+    label: String,
     password: String,
     onPasswordChanged: (String) -> Unit,
 ) {
     TextField(
         modifier = modifier,
         label = {
-            Text(stringResource(R.string.label_password))
+            Text(label)
         },
         keyboardOptions = KeyboardOptions(
             capitalization = KeyboardCapitalization.None,
@@ -28,6 +30,7 @@ fun PasswordProtection(
         ),
         value = password,
         onValueChange = onPasswordChanged,
+        visualTransformation = PasswordVisualTransformation(),
         maxLines = 2,
     )
 }

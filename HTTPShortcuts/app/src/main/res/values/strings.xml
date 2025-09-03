@@ -254,6 +254,10 @@
     <string name="title_import_export_advanced_settings">Advanced</string>
     <!-- Title for "Automatic Import / Export" feature, shown in "Advanced" section of "Import & Export" screen -->
     <string name="settings_automatic_import_export">Automatic Import / Export</string>
+    <!-- Label on floating action button on automatic sync screen, to trigger an import of shortcuts & other daa -->
+    <string name="fab_automatic_import_now">Import now</string>
+    <!-- Label on floating action button on automatic sync screen, to trigger an export of shortcuts & other daa -->
+    <string name="fab_automatic_export_now">Export now</string>
     <!-- Success message, shown in snackbar when export of shortcuts is successful -->
     <plurals name="shortcut_export_success">
         <item quantity="one">1 shortcut exported.</item>
@@ -1946,8 +1950,22 @@
     <string name="sync_type_automatic_export_description">Periodically export shortcuts, variables, etc. to back them up or sync with other devices.</string>
     <!-- Label on button to configure the automatic import or export -->
     <string name="button_sync_configure">Configure</string>
+    <!-- TODO -->
     <string name="label_export_schedule">Schedule</string>
+    <!-- TODO -->
     <string name="label_import_schedule">Schedule</string>
+    <!-- TODO -->
     <string name="sync_schedule_every_day">Once per day</string>
+    <!-- TODO -->
     <string name="sync_schedule_every_week">Once per week</string>
+    <!-- Label above input field in automatic export, to protect the file with a password -->
+    <string name="label_export_protect_with_password">Protect with Password</string>
+    <!-- Label above input field in automatic import, to enter the password that was used to protect the file -->
+    <string name="label_import_protected_with_password">Protected with Password</string>
+    <!-- TODO -->
+    <string name="label_export_target">Export to</string>
+    <!-- TODO -->
+    <string name="option_sync_export_target_file">Local File</string>
+    <!-- TODO -->
+    <string name="option_sync_export_target_url">Web Server</string>
 </resources>

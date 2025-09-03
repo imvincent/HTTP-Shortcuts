@@ -64,7 +64,7 @@ fun ImportExportContent(
             title = stringResource(R.string.title_import_export_advanced_settings),
         ) {
             SettingsButton(
-                icon = Icons.Outlined.Sync,
+                icon = painterResource(R.drawable.outline_sync_24),
                 title = stringResource(R.string.settings_automatic_import_export),
                 onClick = onSyncButtonClicked,
             )

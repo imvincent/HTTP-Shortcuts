@@ -8,6 +8,7 @@ import ch.rmy.android.http_shortcuts.data.enums.SyncSchedule
 import ch.rmy.android.http_shortcuts.data.enums.SyncType
 import ch.rmy.android.http_shortcuts.data.models.SyncConfig
 import ch.rmy.android.http_shortcuts.data.settings.UserPreferences
+import ch.rmy.android.http_shortcuts.navigation.NavigationDestination
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlin.time.Duration.Companion.milliseconds
@@ -47,7 +48,8 @@ constructor(
         }
         return SyncImportViewState(
             schedule = config.schedule,
-            password = config.password,
+            password = config.filePassword,
+            hasChanged = false,
         )
     }
 
@@ -57,7 +59,10 @@ constructor(
 
     fun onScheduleChanged(schedule: SyncSchedule) = runAction {
         updateViewState {
-            copy(schedule = schedule)
+            copy(
+                schedule = schedule,
+                hasChanged = true,
+            )
         }
         updateConfig {
             copy(schedule = schedule)
@@ -66,8 +71,15 @@ constructor(
 
     fun onPasswordChanged(password: String) = runAction {
         updateViewState {
-            copy(password = password)
+            copy(
+                password = password,
+                hasChanged = true,
+            )
         }
-        updateConfig { copy(password = password) }
+        updateConfig { copy(filePassword = password) }
+    }
+
+    fun onBackPressed() = runAction {
+        closeScreen(NavigationDestination.SyncImport.RESULT_CHANGED)
     }
 }

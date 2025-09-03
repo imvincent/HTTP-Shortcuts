@@ -39,6 +39,7 @@ fun SyncImportContent(
 
         PasswordProtection(
             modifier = Modifier.fillMaxWidth(),
+            label = stringResource(R.string.label_import_protected_with_password),
             password = viewState.password,
             onPasswordChanged = onPasswordChanged,
         )
