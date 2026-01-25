@@ -43,6 +43,10 @@ constructor() {
             HistoryEventType.NETWORK_ERROR -> getEventData<HistoryEvent.NetworkError>()
             HistoryEventType.ERROR -> getEventData<HistoryEvent.Error>()
             HistoryEventType.CUSTOM_EVENT -> getEventData<HistoryEvent.CustomEvent>()
+            HistoryEventType.SYNC_IMPORT_SUCCESS -> getEventData<HistoryEvent.SyncImportSucceed>()
+            HistoryEventType.SYNC_IMPORT_FAILED -> getEventData<HistoryEvent.SyncImportFailed>()
+            HistoryEventType.SYNC_EXPORT_SUCCESS -> getEventData<HistoryEvent.SyncExportSucceed>()
+            HistoryEventType.SYNC_EXPORT_FAILED -> getEventData<HistoryEvent.SyncExportFailed>()
         }
 
     private fun HistoryEvent.getTitle(): Localizable =
@@ -72,6 +76,18 @@ constructor() {
             is HistoryEvent.CustomEvent -> Localizable.create {
                 title
             }
+            is HistoryEvent.SyncImportSucceed -> Localizable.create {
+                it.getString(R.string.event_history_title_sync_import_succeeded)
+            }
+            is HistoryEvent.SyncImportFailed -> Localizable.create {
+                it.getString(R.string.event_history_title_sync_import_failed)
+            }
+            is HistoryEvent.SyncExportSucceed -> Localizable.create {
+                it.getString(R.string.event_history_title_sync_export_succeeded)
+            }
+            is HistoryEvent.SyncExportFailed -> Localizable.create {
+                it.getString(R.string.event_history_title_sync_export_failed)
+            }
         }
 
     private fun HistoryEvent.getDetail(): Localizable? =
@@ -88,6 +104,10 @@ constructor() {
                 is HistoryEvent.NetworkError -> error.toLocalizable()
                 is HistoryEvent.Error -> error.toLocalizable()
                 is HistoryEvent.CustomEvent -> message?.takeUnlessEmpty()?.toLocalizable()
+                is HistoryEvent.SyncImportSucceed -> details?.takeUnlessEmpty()?.toLocalizable()
+                is HistoryEvent.SyncImportFailed -> details?.takeUnlessEmpty()?.toLocalizable()
+                is HistoryEvent.SyncExportSucceed -> details?.takeUnlessEmpty()?.toLocalizable()
+                is HistoryEvent.SyncExportFailed -> details?.takeUnlessEmpty()?.toLocalizable()
             }
         }
 

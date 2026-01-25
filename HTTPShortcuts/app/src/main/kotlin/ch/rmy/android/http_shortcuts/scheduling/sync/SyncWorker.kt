@@ -11,18 +11,23 @@ import androidx.work.WorkInfo
 import androidx.work.WorkManager
 import androidx.work.WorkerParameters
 import ch.rmy.android.framework.extensions.runIf
+import ch.rmy.android.framework.extensions.takeUnlessEmpty
 import ch.rmy.android.http_shortcuts.data.domains.sync.SyncRepository
+import ch.rmy.android.http_shortcuts.data.enums.SyncTargetType
 import ch.rmy.android.http_shortcuts.data.enums.SyncType
+import ch.rmy.android.http_shortcuts.data.models.SyncConfig
+import ch.rmy.android.http_shortcuts.data.settings.DeviceLocalPreferences
 import ch.rmy.android.http_shortcuts.data.settings.UserPreferences
+import ch.rmy.android.http_shortcuts.history.HistoryEvent
+import ch.rmy.android.http_shortcuts.history.HistoryEventLogger
 import ch.rmy.android.http_shortcuts.import_export.Exporter
+import ch.rmy.android.http_shortcuts.import_export.ImportMode
 import ch.rmy.android.http_shortcuts.import_export.Importer
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.distinctUntilChanged
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.mapLatest
 import javax.inject.Inject
 import kotlin.time.Duration
@@ -36,25 +41,87 @@ constructor(
     @Assisted context: Context,
     @Assisted params: WorkerParameters,
     private val userPreferences: UserPreferences,
+    private val deviceLocalPreferences: DeviceLocalPreferences,
     private val syncRepository: SyncRepository,
     private val importer: Importer,
     private val exporter: Exporter,
+    private val historyEventLogger: HistoryEventLogger,
 ) : CoroutineWorker(context, params) {
     override suspend fun doWork(): Result {
         val syncType = userPreferences.syncType ?: return Result.success()
         val config = syncRepository.getConfig(syncType)
 
-        delay(1000)
-
         when (config.type) {
-            SyncType.IMPORT -> {
-                // TODO
-            }
-            SyncType.EXPORT -> {
-                // TODO
-            }
+            SyncType.IMPORT -> runImport(config)
+            SyncType.EXPORT -> runExport(config)
         }
-        return Result.success() // TODO
+        deviceLocalPreferences.syncErrorCount = 0
+        return Result.success()
+    }
+
+    private suspend fun runImport(config: SyncConfig) {
+        try {
+            when (config.targetType) {
+                SyncTargetType.FILE -> TODO() // resolve the uri to the real file
+                SyncTargetType.URL -> TODO() // download the url into a temp file using an OkHttp client, then import from it
+            }
+
+            val status = importer.importFromUri(
+                uri = TODO(),
+                importMode = ImportMode.MERGE, // TODO: Allow for a "Replace" style import
+                password = config.filePassword.takeUnlessEmpty(),
+            )
+
+
+
+            historyEventLogger.logEvent(
+                HistoryEvent.SyncImportSucceed(),
+            )
+        } catch (e: Exception) {
+            incrementAndCheckErrorCount(e)
+            deviceLocalPreferences.syncErrorCount++
+            historyEventLogger.logEvent(
+                HistoryEvent.SyncImportFailed(),
+            )
+            throw e
+        }
+    }
+
+    private suspend fun runExport(config: SyncConfig) {
+        try {
+            when (config.targetType) {
+                SyncTargetType.FILE -> TODO() // resolve the uri to the real file
+                SyncTargetType.URL -> TODO() // write into a temp file, then upload that file using an OkHttp client
+            }
+
+            exporter.exportToUri(
+                uri = TODO(),
+                password = config.filePassword.takeUnlessEmpty(),
+                excludeDefaults = true,
+            )
+
+            historyEventLogger.logEvent(
+                HistoryEvent.SyncExportSucceed(),
+            )
+        } catch (e: Exception) {
+            incrementAndCheckErrorCount(e)
+            historyEventLogger.logEvent(
+                HistoryEvent.SyncExportFailed(),
+            )
+            throw e
+        }
+    }
+
+    private fun incrementAndCheckErrorCount(e: Exception) {
+        if (SINGLE_TAG in tags) {
+            return
+        }
+
+        // TODO: Don't increment if the exception is a temporary network error
+        if (deviceLocalPreferences.syncErrorCount++ > 5) {
+            userPreferences.syncType = null
+            deviceLocalPreferences.syncErrorCount = 0
+        }
     }
 
     class Starter

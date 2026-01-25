@@ -1507,6 +1507,14 @@
     <string name="event_history_title_network_error">Network error for \“%s\”</string>
     <!-- Title of event history entry, which states that an execution error has occurred. %s is a placeholder for the shortcut's name -->
     <string name="event_history_title_execution_error">Execution error for \“%s\”</string>
+    <!-- Title of event history entry, which states that the automatic periodic import ran successfully -->
+    <string name="event_history_title_sync_import_succeeded">Automatic import succeeded</string>
+    <!-- Title of event history entry, which states that the automatic periodic import failed -->
+    <string name="event_history_title_sync_import_failed">Automatic import failed</string>
+    <!-- Title of event history entry, which states that the automatic periodic export ran successfully -->
+    <string name="event_history_title_sync_export_succeeded">Automatic export succeeded</string>
+    <!-- Title of event history entry, which states that the automatic periodic export failed -->
+    <string name="event_history_title_sync_export_failed">Automatic export failed</string>
     <!-- Text displayed in details of "Shortcut triggered" event in Event History, which indicates how a shortcut was triggered. %s is a placeholder for the trigger source, e.g. "homescreen" -->
     <string name="label_prefix_event_history_trigger_origin">Triggered via: %s</string>
     <!-- Text displayed in details of "Shortcut triggered" event in Event History, to denote a specific type of shortcut trigger/origin: -->

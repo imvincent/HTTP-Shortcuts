@@ -41,4 +41,21 @@ sealed interface HistoryEvent {
         val title: String,
         val message: String?,
     ) : HistoryEvent
+
+    data class SyncImportSucceed(
+        val details: String? = null,
+    ) : HistoryEvent
+
+    data class SyncImportFailed(
+        val details: String? = null,
+    ) : HistoryEvent
+
+    data class SyncExportSucceed(
+        val details: String? = null,
+    ) : HistoryEvent
+
+    data class SyncExportFailed(
+        val details: String? = null,
+    ) : HistoryEvent
+
 }
